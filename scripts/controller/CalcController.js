@@ -8,6 +8,7 @@ class CalcController {
         this._timeEl = document.querySelector("#hora");
         this._currentDate;
         this.initialize();
+        this.initButtonsEvents();
         
     }
 
@@ -18,6 +19,33 @@ class CalcController {
             this.setDisplayDateTime();
         }, 1000);
         
+    }
+
+    //Método que adiciona varios eventos em um elemento.
+    addEventListenerAll(element, events, fn){
+        /* console.log(eventsArr); */
+        events.split(' ').forEach((value, index) => {
+            element.addEventListener(value, fn, false);
+        });
+    }
+
+    initButtonsEvents(){
+
+        //Selecionando os botões da calculadora pela a classe
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+
+        //Precisamos usar um laço para percorrer os botões, pois selecionamos usando o querySelectorAll, o retorno é uma node list, semelhante a um array.
+        buttons.forEach((btn, index)=> {
+            this.addEventListenerAll(btn, 'click drag', e => {
+                console.log(btn.className.baseVal.replace('btn-',''));
+            });
+
+            this.addEventListenerAll(btn, 'mouseover mouseup mousedown', e => {
+                btn.style.cursor = 'pointer';
+            })
+
+        });
+
     }
 
     setDisplayDateTime(){
