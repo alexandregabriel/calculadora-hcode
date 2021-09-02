@@ -43,9 +43,62 @@ class CalcController {
 
     }
 
-    addOperation(value){
+    getLastOperation() {
+        return this._operation[this._operation.length -1];
+    }
 
-        this._operation.push(value);
+    setLastOperation(value) {
+        this._operation[this._operation.length -1] = value;
+    }
+
+    isOperator(value) {
+        //Foi criado um array com os operadores para verificar se o ultimo elem. digitado é um operador. Se o método retornar alguma posição, é porque foi passado algum operador. Se o método indexOf() retornar -1, significa que o valor passado não foi encontrado no array.
+
+       return (['+', '-', '*', '%', '/'].indexOf(value) > -1);
+
+    }
+
+    addOperation(value){
+        /* if (isNaN(value)) {
+            this._operation.push(value);
+            console.log(this._operation);
+            return;
+        }
+
+        if (this._operation.length === 0 || isNaN(this.getLastOperation())) {
+            this._operation.push(String(value));
+            console.log(this._operation);
+            return;
+        }
+
+        this.getLastOperation() += value;
+        console.log(this._operation); */
+
+        if (isNaN(this.getLastOperation())){    //Neste caso, se for um numero, irá retornar false.
+            //String
+
+            if (this.isOperator(value)){
+                this.setLastOperation(value);
+                //this._operation.push(value);
+            }else if (isNaN(value)){ 
+
+                console.log(value);
+            }else{
+                this._operation.push(value);
+            }
+
+
+        }else{
+            //Number
+            if (this.isOperator(value)){
+                this._operation.push(value);
+                
+            }else{
+                let newValue = this.getLastOperation().toString() + value.toString();
+                this.setLastOperation(parseInt(newValue)); 
+            }            
+        }
+        
         console.log(this._operation);
 
     }
@@ -69,28 +122,34 @@ class CalcController {
                 break;
 
             case 'soma':
-
+                this.addOperation('+')
                 break;
 
             case 'subtracao':
-
+                this.addOperation('-')
                 break;
 
             case 'divisao':
+                this.addOperation('/')
 
                 break;
 
             case 'multiplicacao':
-
+                this.addOperation('*')
+        
                 break;
 
             case 'porcento':
-
+                this.addOperation('%')
                 break;
 
             case 'igual':
-
+                this.addOperation('=')
                 break;
+
+            case 'ponto':
+                this.addOperation('.')
+                break; 
             
             case '0':
             case '1':
