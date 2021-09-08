@@ -10,6 +10,7 @@ class CalcController {
         this._currentDate;
         this.initialize();
         this.initButtonsEvents();
+        this.setLastNumberToDisplay();
 
     }
 
@@ -33,6 +34,7 @@ class CalcController {
     clearAll() {
 
         this._operation = [];
+        this.setLastNumberToDisplay();
 
     }
 
@@ -40,6 +42,7 @@ class CalcController {
     clearEntry() {
         //O método Array.pop() remove o último elemento do array. No caso da calculadora, o botão Clear Entry apaga a entrada atual do usuario.
         this._operation.pop();
+        this.setLastNumberToDisplay();
 
     }
 
@@ -68,20 +71,49 @@ class CalcController {
     }
 
     calc(){
+        let last = '';
 
-        let last = this._operation.pop();   //Retira o ultimo elemento e guarda o valor na variável.
+        if (this._operation.length > 3){
+            last = this._operation.pop();
+        }
 
+        //last = this._operation.pop();   //Retira o ultimo elemento e guarda o valor na variável.
         let result = eval(this._operation.join(''));
 
-        this._operation = [result, last];
+        if (last == '%'){
+
+           result /= 100;
+           this._operation = [result];
+
+        }else{
+            
+
+            this._operation = [result];
+
+            if (last) this._operation.push(last);
+        }
+
+        
+
+        this.setLastNumberToDisplay();
 
 
     }
 
     setLastNumberToDisplay(){
 
-        
+        let lastNumber;
 
+        for (let i = this._operation.length - 1; i >= 0; i--) {
+            if (!this.isOperator(this._operation[i])) {
+                lastNumber = this._operation[i];
+                break;
+            }
+        }
+
+        if (!lastNumber) lastNumber = 0;
+
+        this.displayCalc = lastNumber;
     }
 
     addOperation(value){
@@ -101,7 +133,7 @@ class CalcController {
         console.log(this._operation); */
 
         if (isNaN(this.getLastOperation())){    //Neste caso, se for um numero, irá retornar false.
-            //String
+            
 
             if (this.isOperator(value)){
                 this.setLastOperation(value);
@@ -111,6 +143,7 @@ class CalcController {
                 console.log('Outra coisa ', value);
             }else{
                 this.pushOperation(value);
+                this.setLastNumberToDisplay();
             }
 
 
@@ -170,7 +203,7 @@ class CalcController {
                 break;
 
             case 'igual':
-                this.addOperation('=')
+                this.calc();
                 break;
 
             case 'ponto':
