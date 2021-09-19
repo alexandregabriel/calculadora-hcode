@@ -15,12 +15,34 @@ class CalcController {
     this.setLastNumberToDisplay()
   }
 
+  pasteFromKeyboard() {
+    document.addEventListener('paste', e => {
+      let text = e.clipboardData.getData('Text')
+      this.displayCalc = parseFloat(text)
+    })
+  }
+
+  copyToClipboard() {
+    let input = document.createElement('input')
+
+    input.value = this.displayCalc
+
+    document.body.appendChild(input)
+
+    input.select() //Comando usado para selecionar dinamicamente um elemento, neste caso, um elemento input.
+
+    document.execCommand('Copy')
+    input.remove()
+  }
+
   initialize() {
     this.setDisplayDateTime()
     setInterval(() => {
       //Usando o setInterval() para fazer com que a data e hora atualizem de forma intermitente.
       this.setDisplayDateTime()
     }, 1000)
+
+    this.pasteFromKeyboard()
   }
 
   initKeyboardEvents() {
@@ -42,17 +64,17 @@ class CalcController {
         case '*':
         case '%':
           this.addOperation(event.key)
-          break;
+          break
 
         case 'Enter':
         case '=':
           this.calc()
-          break;
+          break
 
         case '.':
         case ',':
           this.addDot()
-          break;
+          break
 
         case '0':
         case '1':
@@ -65,11 +87,11 @@ class CalcController {
         case '8':
         case '9':
           this.addOperation(parseInt(event.key))
-          break;
+          break
 
+        case 'c':
+          if (event.ctrlKey) this.copyToClipboard()
       }
-
-
     })
   }
 
