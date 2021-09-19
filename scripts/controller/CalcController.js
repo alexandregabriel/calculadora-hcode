@@ -29,10 +29,11 @@ class CalcController {
 
     document.body.appendChild(input)
 
-    input.select() //Comando usado para selecionar dinamicamente um elemento, neste caso, um elemento input.
-
-    document.execCommand('Copy')
-    input.remove()
+    //input.select() //Comando usado para selecionar dinamicamente um elemento, neste caso, um elemento input.
+    //document.execCommand('Copy')
+    navigator.clipboard.writeText(input.value).then(() => {
+      input.remove()
+    })
   }
 
   initialize() {
